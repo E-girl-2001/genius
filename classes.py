@@ -19,7 +19,10 @@ class Beverage:
         self.drinks_no = drinks_no
         self.volume = volume
         self.alcohol_content = alcohol_content
-        self.dollars_per_standard = round(CONVERSION*float(price)/(float(drinks_no)*float(volume)*(float(alcohol_content)/100)), 2)
+        if alcohol_content == -1:
+            self.dollars_per_standard = -1
+        else:
+            self.dollars_per_standard = round(CONVERSION*float(price)/(float(drinks_no)*float(volume)*(float(alcohol_content)/100)), 2)
         self.alc_type = alc_type
 
     def __repr__(self):

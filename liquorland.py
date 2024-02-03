@@ -97,13 +97,14 @@ def get_beer_data():
     init_browser("https://www.liquorland.co.nz/shop/beer")
     select_location()
     choose_instock()
-    content = 18
+    content = 0
     while True:
         if content % LOAD_MORE_LENGTH == 0:
             try:
                 load_more = driver.find_element(By.ID, "productListLoadMore")
                 ActionChains(driver).scroll_to_element(load_more).perform()
                 load_more.click()
+                time.sleep(2)
             except:
                 print("No More Pages")
         try:

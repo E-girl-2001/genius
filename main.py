@@ -8,8 +8,6 @@ beers = get_beer_data()
 print(beers)
 print(len(beers))
 writer(beers, "beers.csv")
-print("hello")
-
 
 
 

@@ -1,3 +1,13 @@
-name                  ,price ,drinks_no ,volume ,alcohol_content ,dollars_per_standard ,alc_type
-SOL MEXICAN LAGER     ,24.99 ,       12 ,   330 ,            4.5 ,                1.78 ,beer
-PERONI NASTRO AZZURRO ,26.99 ,       12 ,   330 ,            5.1 ,                1.69 ,beer
+name,price,drinks_no,volume,alcohol_content,dollars_per_standard,alc_type
+BAVARIA HOLLAND ,15.99,4,500,3.99,2.54,beer
+HOLLANDIA BEER ,12.99,6,330,3.99,2.08,beer
+FLAME ,27.99,15,330,5.2,1.38,beer
+EXPORT ,31.99,15,330,4.6,1.78,beer
+HEINEKEN ,29.99,15,330,5.0,1.54,beer
+VICTORIA BITTER ,14.99,6,375,4.6,1.84,beer
+KINGFISHER ,24.99,12,330,5.0,1.6,beer
+HEINEKEN ,44.99,24,330,5.0,1.44,beer
+SPEIGHTS ,39.99,24,330,4.0,1.6,beer
+STEINLAGER PURE ,49.99,24,330,5.0,1.6,beer
+STEINLAGER CLASSIC ,34.99,18,330,3.99,1.87,beer
+RANFURLY DRAUGHT ,32.99,18,440,4,1.32,beer
