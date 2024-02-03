@@ -1,0 +1,3 @@
+name                  ,price ,drinks_no ,volume ,alcohol_content ,dollars_per_standard ,alc_type
+SOL MEXICAN LAGER     ,24.99 ,       12 ,   330 ,            4.5 ,                1.78 ,beer
+PERONI NASTRO AZZURRO ,26.99 ,       12 ,   330 ,            5.1 ,                1.69 ,beer
