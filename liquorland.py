@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from classes import Beverage
-from text_proccesser import init_beer
+from drink_initiliser import init_drink
 import time
 
 LOAD_MORE_LENGTH = 20
@@ -19,9 +19,10 @@ options = Options()
 options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(service = s, options = options)
 
-def init_browser(link = "https://www.liquorland.co.nz/"):
+def init_browser(type_of_drink):
     """google"""
-    driver.get(link)
+    type_of_drink = type_of_drink.lower()
+    driver.get(f"https://www.liquorland.co.nz/shop/{type_of_drink}")
     yes = driver.find_element(By.CLASS_NAME, "col-6")
     yes.click()
 
@@ -40,6 +41,13 @@ def select_location(location = "Upper Riccarton"):
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="loadedStores"]/div[1]/div/div[3]/a')))
     first_option = driver.find_element(By.XPATH, '//*[@id="loadedStores"]/div[1]/div/div[3]/a')
     first_option.click()
+
+def choose_type_of_drink(drink_type="Beer"):
+    # Wait for the element to be present
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, f'//a[@href="/shop/{drink_type}"]')))
+    # Find the element and click on it
+    drink_type_element = driver.find_element(By.XPATH, f'//a[@href="/shop/{drink_type}"]')
+    drink_type_element.click()
 
 def choose_instock():
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "showInStockItemsOnlyDesktop")))
@@ -71,7 +79,7 @@ def get_beer_from_string(drink_name):
     description = driver.find_element(By.ID, "collapseOne")
     price = driver.find_element(By.CLASS_NAME, "current-price")
     price = price.text[1:]
-    drink = init_beer(title.text, description.text, price)
+    drink = init_drink(title.text, description.text, price, "beer")
     return drink
 
 def get_beers_from_list(drink_names):
@@ -83,7 +91,7 @@ def get_beers_from_list(drink_names):
     driver.close()
     return drinks
 
-def get_beer_data():
+def get_drinks_data(drink_type = "beer"):
     """
     Get all the beers on the page sequentially 
     then add them to the beers list
@@ -93,35 +101,38 @@ def get_beer_data():
     is clicked or there are no more 
     beers and the program ends and driver is quit.
     """
-    beers = []
-    init_browser("https://www.liquorland.co.nz/shop/beer")
+    drinks = []
+    init_browser(drink_type)
     select_location()
     choose_instock()
-    content = 0
+    content = 18
     while True:
         if content % LOAD_MORE_LENGTH == 0:
             try:
-                load_more = driver.find_element(By.ID, "productListLoadMore")
-                ActionChains(driver).scroll_to_element(load_more).perform()
-                load_more.click()
-                time.sleep(2)
+                # load_more = driver.find_element(By.ID, "productListLoadMore")
+                # ActionChains(driver).scroll_to_element(load_more).perform()
+                # load_more.click()
+                # time.sleep(2)
+                next_page = driver.find_element(By.XPATH, f'//a[@data-page-number="{content//LOAD_MORE_LENGTH+1}"]')
+                ActionChains(driver).scroll_to_element(next_page).perform()
+                next_page.click()
             except:
                 print("No More Pages")
         try:
-            """click beer"""
-            beer = driver.find_element(By.XPATH, '//a[@data-position="'+str(content)+'"]')
+            """click drink"""
+            beer = driver.find_element(By.XPATH, f'//a[@data-position="{str(content%LOAD_MORE_LENGTH)}"]')
             ActionChains(driver).scroll_to_element(beer).perform()
             beer.click()
-            """get beer data"""
+            """get drink data"""
             title, description, price = get_info_from_page()
-            drink = init_beer(title.text, description.text, price)
+            drink = init_drink(title.text, description.text, price, drink_type)
             driver.back()
-            beers.append(drink)
+            drinks.append(drink)
             content += 1
         except:
-            print("No More Beers")
+            print("No More Drinks")
             break
     # driver.quit()
-    return beers
+    return drinks
 
 

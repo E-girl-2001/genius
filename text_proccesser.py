@@ -1,29 +1,25 @@
+"""
+Description: This file contains the functions 
+that are used to process the text data from the website
+"""
 
-from classes import Beverage
-from calcs import calculate_dolars_per_standard
-DEFULT_ALC_CONTENT = 3.99 # if the alc content is not found in the description
-
-def init_beer(title, description, price):
-    name = get_name(title)
-    # print(name)
-    number_of_drinks = get_number_of_drinks(title)
-    # print(number_of_drinks)
-    volume = get_volume(title)
-    # print(volume)
-    alcohol_content = get_alc_content(description)
-    # print(alcohol_content)
-    drink = Beverage(name, price, number_of_drinks,
-                    volume, alcohol_content, "beer")
-    return drink
 
 def get_volume(title):
+    measured_in_litres = False
     index = title.find("ML")
+    if index == -1:
+        index = title.find("LT")
+        measured_in_litres = True
+        if index == -1:
+            return 999
     volume_string = ''
     index -= 1
     while title[index].isdigit():
         volume_string = title[index] + volume_string
         index -= 1
     number = int(volume_string)
+    if measured_in_litres:
+        number *= 1000
     # print(str(number) + "ml")
     return number
 
@@ -41,14 +37,17 @@ def get_number_of_drinks(title):
 def get_alc_content(description):
     index = description.find("%")
     if index == -1:
-        return DEFULT_ALC_CONTENT
+        return -2
     alc_string = ''
     index -= 1
     while description[index].isdigit() or description[index] == "." and index >= 0:
         alc_string = description[index] + alc_string
         index -= 1
     # print(alc_string + "%")
-    return alc_string
+    alc_content = float(alc_string)
+    if alc_content == 0:
+        return -1
+    return alc_content
 
 def get_name(title):
     name = ''
