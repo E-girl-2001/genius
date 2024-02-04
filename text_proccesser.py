@@ -2,8 +2,6 @@
 Description: This file contains the functions 
 that are used to process the text data from the website
 """
-
-
 def get_volume(title):
     measured_in_litres = False
     index = title.find("ML")
@@ -34,10 +32,12 @@ def get_number_of_drinks(title):
     # print(str(number) + " per pack")
     return number
 
-def get_alc_content(description):
+def get_alc_content(title, description):
     index = description.find("%")
     if index == -1:
-        return -2
+        index = title.find("%")
+        if index == -1:
+            return -1
     alc_string = ''
     index -= 1
     while description[index].isdigit() or description[index] == "." and index >= 0:
@@ -47,17 +47,5 @@ def get_alc_content(description):
     alc_content = float(alc_string)
     if alc_content == 0:
         return -1
+
     return alc_content
-
-def get_name(title):
-    name = ''
-    for i in title:
-        if not i.isdigit():
-            name += i
-        else:
-            break
-    return name
-
-# print(get_volume("BAVARIA HOLLAND 8.6 4 PACK CANS 500ML"))
-# print(get_number_of_drinks("BAVARIA HOLLAND 8.6 4 PACK CANS 500ML"))
-

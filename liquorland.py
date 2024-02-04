@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from classes import Beverage
 from drink_initiliser import init_drink
+from write_to_csv import add_drink_to_csv
 import time
 
 LOAD_MORE_LENGTH = 20
@@ -91,7 +92,7 @@ def get_beers_from_list(drink_names):
     driver.close()
     return drinks
 
-def get_drinks_data(drink_type = "beer"):
+def get_drinks_data(drink_type, filename):
     """
     Get all the beers on the page sequentially 
     then add them to the beers list
@@ -101,38 +102,39 @@ def get_drinks_data(drink_type = "beer"):
     is clicked or there are no more 
     beers and the program ends and driver is quit.
     """
-    drinks = []
+    # drinks = []
     init_browser(drink_type)
     select_location()
     choose_instock()
-    content = 18
+    content = 0
     while True:
-        if content % LOAD_MORE_LENGTH == 0:
+        if content % LOAD_MORE_LENGTH == 0 and not content == 0:
             try:
-                # load_more = driver.find_element(By.ID, "productListLoadMore")
-                # ActionChains(driver).scroll_to_element(load_more).perform()
-                # load_more.click()
-                # time.sleep(2)
                 next_page = driver.find_element(By.XPATH, f'//a[@data-page-number="{content//LOAD_MORE_LENGTH+1}"]')
                 ActionChains(driver).scroll_to_element(next_page).perform()
                 next_page.click()
             except:
                 print("No More Pages")
         try:
-            """click drink"""
             beer = driver.find_element(By.XPATH, f'//a[@data-position="{str(content%LOAD_MORE_LENGTH)}"]')
             ActionChains(driver).scroll_to_element(beer).perform()
             beer.click()
+        except:
+            print("No More Drinks")
+            break
+        try:
             """get drink data"""
             title, description, price = get_info_from_page()
             drink = init_drink(title.text, description.text, price, drink_type)
             driver.back()
-            drinks.append(drink)
+            add_drink_to_csv(drink, filename)
+            # drinks.append(drink)
             content += 1
         except:
-            print("No More Drinks")
-            break
-    # driver.quit()
-    return drinks
+            driver.back()
+            content += 1
+            continue
+    driver.quit()
+    # return drinks
 
 
