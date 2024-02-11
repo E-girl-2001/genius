@@ -2,10 +2,12 @@ from classes import Beverage
 from liquorland import *
 from write_to_csv import *
 
-init_csv("drinks.csv")
-
+filename = "drinks2.csv"
 beverage_types = ["ready-to-drink", "wine", "spirits", "craft beer", "beer"]
-get_drinks_data("beer", "drinks.csv")
+
+
+init_csv(filename)
+get_drinks_data("ready-to-drink", filename)
 
 
 
